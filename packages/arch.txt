@@ -1,5 +1,5 @@
-# Spectrum — Arch Linux packages (pacman)
-# quickshell is AUR-only — see install.sh / README
+# Spectrum — Arch Linux (official repos / pacman)
+# AUR-only packages: see packages/aur.txt
 
 # Hyprland stack
 hyprland
@@ -29,9 +29,7 @@ wl-clipboard
 networkmanager
 
 # GTK / icons / fonts
-adw-gtk3
 adwaita-icon-theme
-ttf-rubik
 ttf-jetbrains-mono-nerd
 
 # Apps & utilities

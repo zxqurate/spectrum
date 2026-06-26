@@ -1,0 +1,6 @@
+# Spectrum — AUR packages (yay / paru)
+# Used by: ./install.sh --install-aur
+
+quickshell
+adw-gtk3
+ttf-rubik-vf

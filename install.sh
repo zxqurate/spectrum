@@ -112,15 +112,37 @@ install_pacman_deps() {
     run sudo pacman -S --needed --noconfirm "${pkgs[@]}"
 }
 
-install_aur_quickshell() {
+install_aur_deps() {
+    local list="$REPO_ROOT/packages/aur.txt"
+    [[ -f "$list" ]] || { install_aur_quickshell_legacy; return; }
+    local pkgs=()
+    while IFS= read -r line; do
+        line="${line%%#*}"
+        line="${line// /}"
+        [[ -n "$line" ]] && pkgs+=("$line")
+    done < "$list"
+    if ((${#pkgs[@]} == 0)); then
+        return
+    fi
+    log "Installing ${#pkgs[@]} AUR packages..."
+    if have yay; then
+        run yay -S --needed --noconfirm "${pkgs[@]}"
+    elif have paru; then
+        run paru -S --needed --noconfirm "${pkgs[@]}"
+    else
+        warn "Install AUR packages manually: ${pkgs[*]}"
+        warn "yay -S ${pkgs[*]}"
+    fi
+}
+
+install_aur_quickshell_legacy() {
     have quickshell && { log "quickshell already installed"; return; }
     if have yay; then
         run yay -S --needed --noconfirm quickshell
     elif have paru; then
         run paru -S --needed --noconfirm quickshell
     else
-        warn "Install quickshell manually from AUR (illogical-impulse-git)"
-        warn "https://github.com/quickshell-impl/quickshell"
+        warn "Install quickshell manually from AUR"
     fi
 }
 
@@ -333,7 +355,7 @@ main() {
     log "Spectrum installer (repo: $REPO_ROOT)"
 
     $INSTALL_DEPS && install_pacman_deps
-    $INSTALL_AUR && install_aur_quickshell
+    $INSTALL_AUR && install_aur_deps
 
     deploy_configs
     deploy_wallpapers
