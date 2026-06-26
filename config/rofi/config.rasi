@@ -1,0 +1,220 @@
+@import "colors.rasi"
+
+configuration {
+    modes: "drun,run,window,filebrowser";
+    show-icons: true;
+    drun-display-format: "{name}";
+    window-display-format: "{w} · {c}";
+    display-drun: "󰀻";
+    display-run: "󰅂";
+    display-window: "󰖯";
+    display-filebrowser: "󰉋";
+    font: "JetBrainsMono Nerd Font 11";
+    terminal: "kitty";
+    sorting-method: "fzf";
+    lines: 9;
+    columns: 1;
+    fixed-num-lines: true;
+    hide-scrollbar: true;
+    hover-select: true;
+    me-select-entry: "";
+    me-accept-entry: "MousePrimary";
+}
+
+* {
+    bg-glass:       @surface-glass;
+    bg-input:       @surface-input-glass;
+    bg-banner-tint: @surface-banner-glass;
+    bg-track:       @surface-container-low;
+    fg-main:        @on-surface;
+    fg-muted:       @on-surface-variant;
+    accent:         @primary;
+    accent-soft:    @primary-container;
+    accent-fg:      @on-primary-container;
+    border-soft:    @border-glass;
+    selected-bg:    @surface-selected-glass;
+
+    background-color:            transparent;
+    foreground:                  @fg-main;
+    normal-foreground:           @fg-main;
+    active-foreground:           @fg-main;
+    urgent-foreground:           @fg-main;
+    alternate-normal-foreground: @fg-main;
+    alternate-active-foreground: @fg-main;
+    alternate-urgent-foreground: @fg-main;
+    selected-normal-foreground:  @fg-main;
+    selected-active-foreground:  @fg-main;
+    selected-urgent-foreground:  @fg-main;
+    normal-background:           transparent;
+    active-background:           transparent;
+    urgent-background:           transparent;
+    alternate-normal-background: transparent;
+    alternate-active-background: transparent;
+    alternate-urgent-background: transparent;
+    selected-normal-background:  @selected-bg;
+    selected-active-background:  @selected-bg;
+    selected-urgent-background:  @selected-bg;
+}
+
+window {
+    transparency: "real";
+    location:     center;
+    anchor:       center;
+    width:        38em;
+    padding:      0;
+    border:       0;
+    background-color: transparent;
+}
+
+mainbox {
+    orientation:  vertical;
+    spacing:      0;
+    padding:      0;
+    border:       1px;
+    border-color: @border-soft;
+    border-radius: 22px;
+    background-color: @bg-glass;
+    children:     [ banner, inputbar, mode-switcher, listview ];
+}
+
+banner {
+    orientation:  vertical;
+    expand:       false;
+    height:       120px;
+    padding:      0;
+    border-radius: 22px 22px 0 0;
+    background-color: @bg-banner-tint;
+    background-image: url("banner.jpg", width);
+}
+
+inputbar {
+    orientation:  horizontal;
+    spacing:      8px;
+    padding:      11px 16px;
+    margin:       12px 14px 0 14px;
+    border:       1px;
+    border-color: @border-soft;
+    border-radius: 14px;
+    background-color: @bg-input;
+    children:     [ entry, case-indicator ];
+}
+
+prompt {
+    enabled:      true;
+    text:         "󰍉";
+    text-color:   @fg-muted;
+    padding:      0 4px 0 0;
+}
+
+entry {
+    expand:             true;
+    placeholder:        "Search…";
+    placeholder-color:  @fg-muted;
+    text-color:         @fg-main;
+    cursor:             text;
+}
+
+case-indicator {
+    enabled:      false;
+}
+
+mode-switcher {
+    orientation:  horizontal;
+    spacing:      4px;
+    padding:      4px;
+    margin:       10px 14px 0 14px;
+    border:       0;
+    border-radius: 12px;
+    background-color: @bg-track;
+}
+
+button {
+    expand:       true;
+    padding:      8px 6px;
+    border:       0;
+    border-radius: 9px;
+    background-color: transparent;
+    text-color:   @fg-muted;
+    cursor:       pointer;
+    horizontal-align: 0.5;
+}
+
+button selected {
+    background-color: @accent-soft;
+    text-color:       @accent-fg;
+}
+
+listview {
+    columns:      1;
+    lines:        9;
+    spacing:      2px;
+    padding:      8px 10px 14px 10px;
+    fixed-height: true;
+    cycle:        true;
+    border:       0;
+    background-color: transparent;
+}
+
+element {
+    orientation:  horizontal;
+    spacing:      12px;
+    padding:      10px 14px;
+    margin:       0 4px;
+    border-radius: 12px;
+    border:       0;
+    background-color: transparent;
+    text-color:   @fg-main;
+    expand:       true;
+}
+
+element normal.normal,
+element normal.active,
+element normal.urgent,
+element alternate.normal,
+element alternate.active,
+element alternate.urgent {
+    background-color: transparent;
+    text-color:       @fg-main;
+}
+
+element selected.normal,
+element selected.active,
+element selected.urgent {
+    background-color: @selected-bg;
+    text-color:       @fg-main;
+}
+
+element-icon {
+    size:         1.35em;
+    cursor:       inherit;
+}
+
+element-text {
+    expand:           true;
+    background-color: transparent;
+    text-color:       @fg-main;
+    vertical-align:   0.5;
+    cursor:           inherit;
+}
+
+element-text selected {
+    text-color: @fg-main;
+}
+
+message {
+    border:       0;
+    padding:      10px 14px 14px 14px;
+    background-color: transparent;
+}
+
+textbox {
+    text-color: @fg-main;
+}
+
+scrollbar {
+    handle-width: 3px;
+    width:        3px;
+    handle-color: @accent;
+    padding:      0 2px 0 0;
+    margin:       0 4px 0 0;
+}

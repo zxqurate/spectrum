@@ -1,0 +1,48 @@
+# Spectrum — Arch Linux packages (pacman)
+# quickshell is AUR-only — see install.sh / README
+
+# Hyprland stack
+hyprland
+hypridle
+hyprpicker
+
+# Shell & theme
+awww
+matugen
+kitty
+fish
+rofi
+fzf
+cava
+
+# Audio & brightness
+pipewire
+wireplumber
+brightnessctl
+
+# Screenshots & clipboard
+grim
+slurp
+wl-clipboard
+
+# Network
+networkmanager
+
+# GTK / icons / fonts
+adw-gtk3
+adwaita-icon-theme
+ttf-rubik
+ttf-jetbrains-mono-nerd
+
+# Apps & utilities
+thunar
+exo
+zenity
+libcanberra
+lm_sensors
+gsettings-desktop-schemas
+nwg-displays
+
+# GPU info (optional but recommended)
+pciutils
+mesa-utils

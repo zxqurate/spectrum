@@ -1,0 +1,4 @@
+module widgets
+LockMediaPanel 1.0 LockMediaPanel.qml
+LockRadialVisualizer 1.0 LockRadialVisualizer.qml
+LockGauge 1.0 LockGauge.qml

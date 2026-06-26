@@ -1,0 +1,6 @@
+module popups
+VolumePopup 1.0 VolumePopup.qml
+VolumeOsd 1.0 VolumeOsd.qml
+WifiPopup 1.0 WifiPopup.qml
+StatsPopup 1.0 StatsPopup.qml
+MediaPopup 1.0 MediaPopup.qml

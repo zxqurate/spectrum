@@ -1,0 +1,37 @@
+[config]
+
+[config.wallpaper]
+command = "awww"
+arguments = ["img", "--transition-type", "fade", "--transition-duration", "1"]
+set = false
+
+[templates.hyprland]
+input_path = "~/.config/matugen/templates/hyprland-colors.conf"
+output_path = "~/.config/hypr/colors.conf"
+post_hook = "hyprctl reload 2>/dev/null || true"
+
+[templates.kitty]
+input_path = "~/.config/matugen/templates/kitty-colors.conf"
+output_path = "~/.config/kitty/themes/Matugen.conf"
+post_hook = "kitty +kitten themes --reload-in=all Matugen 2>/dev/null || true"
+
+[templates.rofi]
+input_path = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/colors.rasi"
+
+[templates.quickshell]
+input_path = "~/.config/matugen/templates/quickshell-colors.json"
+output_path = "~/.local/state/quickshell/generated/colors.json"
+
+[templates.fish_prompt]
+input_path = "~/.config/matugen/templates/fish-prompt.fish"
+output_path = "~/.local/state/quickshell/generated/fish_prompt_colors.fish"
+
+[templates.gtk3]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/gtk-3.0/colors.css"
+post_hook = "bash ~/.config/hypr/scripts/apply-gtk-theme.sh"
+
+[templates.gtk4]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/gtk-4.0/colors.css"

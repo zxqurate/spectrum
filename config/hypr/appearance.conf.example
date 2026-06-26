@@ -1,0 +1,56 @@
+# Auto-managed by Quickshell Settings Panel — do not edit by hand
+
+general {
+    border_size = 0
+}
+
+decoration {
+    rounding = 10
+
+    blur {
+        enabled           = true
+        size              = 2
+        passes            = 2
+        xray              = false
+        new_optimizations = true
+        ignore_opacity    = true
+        brightness        = 1.00
+        contrast          = 1.00
+        vibrancy          = 0.00
+        vibrancy_darkness = 0.00
+    }
+
+    shadow {
+        enabled      = false
+        range        = 12
+        render_power = 3
+        color        = rgba(00000066)
+    }
+
+    active_opacity   = 0.75
+    inactive_opacity = 0.70
+}
+
+animations {
+    enabled = true
+
+    animation = windows,    1, 5, easeOut,   slide
+    animation = windowsOut, 1, 4, easeInOut, slide
+    animation = border,     1, 8, easeOut
+    animation = fade,       1, 6, easeOut
+    animation = workspaces, 1, 5, easeOut,   slide
+}
+
+input {
+    kb_layout   = us,ru
+    sensitivity = 0.00
+
+    touchpad {
+        natural_scroll = true
+    }
+}
+
+# quickshell-system-blur=true
+# quickshell-border-size=2
+# quickshell-panel-opacity=0.68
+# quickshell-panel-card-opacity=0.76

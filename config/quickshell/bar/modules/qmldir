@@ -1,0 +1,15 @@
+module modules
+BarLabel 1.0 BarLabel.qml
+BarPill 1.0 BarPill.qml
+BarSeparator 1.0 BarSeparator.qml
+BatteryClock 1.0 BatteryClock.qml
+Clock 1.0 Clock.qml
+Launcher 1.0 Launcher.qml
+LayoutIndicator 1.0 LayoutIndicator.qml
+MediaPlayer 1.0 MediaPlayer.qml
+NetworkStatus 1.0 NetworkStatus.qml
+Spacer 1.0 Spacer.qml
+SysTray 1.0 SysTray.qml
+SystemStats 1.0 SystemStats.qml
+Volume 1.0 Volume.qml
+Workspaces 1.0 Workspaces.qml

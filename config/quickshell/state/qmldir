@@ -1,0 +1,12 @@
+module state
+singleton AppState 1.0 AppState.qml
+singleton MediaState 1.0 MediaState.qml
+singleton CavaState 1.0 CavaState.qml
+singleton VolumeState 1.0 VolumeState.qml
+singleton MicState 1.0 MicState.qml
+singleton AppearanceState 1.0 AppearanceState.qml
+singleton ThemeState 1.0 ThemeState.qml
+singleton ConnectionState 1.0 ConnectionState.qml
+singleton NotificationState 1.0 NotificationState.qml
+singleton AlwaysOnState 1.0 AlwaysOnState.qml
+singleton BarState 1.0 BarState.qml

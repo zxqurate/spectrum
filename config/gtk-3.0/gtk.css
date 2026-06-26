@@ -1,0 +1,140 @@
+@import url("colors.css");
+
+/* ── Global minimal chrome ─────────────────────────────────────────────── */
+
+window {
+    background-color: @window_bg_color;
+}
+
+headerbar {
+    background-color: @headerbar_bg_color;
+    border: none;
+    box-shadow: none;
+    padding: 4px 8px;
+}
+
+headerbar button {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 4px 6px;
+}
+
+headerbar button:hover {
+    background-color: alpha(@accent_bg_color, 0.12);
+}
+
+/* ── Thunar ────────────────────────────────────────────────────────────── */
+
+.thunar {
+    background-color: @window_bg_color;
+}
+
+.thunar headerbar,
+.thunar toolbar {
+    background-color: @window_bg_color;
+    border: none;
+    box-shadow: none;
+    padding: 2px 6px;
+}
+
+.thunar toolbar separator {
+    background: transparent;
+    min-width: 4px;
+}
+
+.thunar .sidebar {
+    background-color: @sidebar_bg_color;
+    border-right: 1px solid @sidebar_border_color;
+}
+
+.thunar .sidebar .view {
+    background-color: transparent;
+    color: @sidebar_fg_color;
+    -gtk-icon-style: symbolic;
+}
+
+.thunar .sidebar .view:selected,
+.thunar .sidebar .view:selected:focus {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+    border-radius: 6px;
+}
+
+.thunar .standard-view {
+    background-color: @view_bg_color;
+}
+
+.thunar .standard-view .view {
+    background-color: transparent;
+    color: @view_fg_color;
+}
+
+.thunar iconview,
+.thunar iconview .view {
+    -gtk-icon-style: symbolic;
+    color: @accent_color;
+}
+
+.thunar iconview:selected,
+.thunar iconview:selected:focus,
+.thunar .view:selected,
+.thunar .view:selected:focus {
+    background-color: alpha(@theme_selected_bg_color, 0.55);
+    color: @theme_selected_fg_color;
+    border-radius: 8px;
+}
+
+.thunar treeview:selected,
+.thunar treeview:selected:focus {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+.thunar statusbar {
+    background-color: @sidebar_bg_color;
+    color: @insensitive_fg_color;
+    border-top: 1px solid @sidebar_border_color;
+    padding: 2px 8px;
+}
+
+.thunar menubar {
+    background-color: @window_bg_color;
+    color: @window_fg_color;
+    border: none;
+}
+
+.thunar menubar > menuitem {
+    padding: 4px 8px;
+}
+
+.thunar menubar > menuitem:hover {
+    background-color: alpha(@accent_bg_color, 0.12);
+}
+
+.thunar .location-bar,
+.thunar .linked button {
+    background-color: @card_bg_color;
+    border: 1px solid @borders;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.thunar .linked button:hover {
+    background-color: alpha(@accent_bg_color, 0.1);
+}
+
+.thunar scrollbar {
+    background: transparent;
+}
+
+.thunar scrollbar slider {
+    background-color: alpha(@insensitive_fg_color, 0.35);
+    border-radius: 999px;
+    min-width: 6px;
+    min-height: 6px;
+}
+
+.thunar scrollbar slider:hover {
+    background-color: alpha(@accent_bg_color, 0.45);
+}

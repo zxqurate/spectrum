@@ -1,0 +1,4 @@
+module widgets
+MediaSeekBar 1.0 MediaSeekBar.qml
+NotificationCard 1.0 NotificationCard.qml
+AnimatedNotificationItem 1.0 AnimatedNotificationItem.qml
