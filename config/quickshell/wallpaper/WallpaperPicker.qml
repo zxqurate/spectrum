@@ -4,12 +4,13 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import "../components"
 import "../state"
 import "../theme"
 
 // Full-screen overlay (same pattern as ControlCenter / KeybindManager)
 // The visible card sits at the bottom; the rest is a dim backdrop.
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     WlrLayershell.namespace: "quickshell"

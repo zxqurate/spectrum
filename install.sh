@@ -331,6 +331,32 @@ deploy_icons() {
     ensure_icon_symlinks
 }
 
+install_systemd_units() {
+    local src="$REPO_ROOT/share/systemd/user/quickshell.service"
+    local dest="$HOME/.config/systemd/user/quickshell.service"
+    [[ -f "$src" ]] || return
+    run mkdir -p "$HOME/.config/systemd/user"
+    if [[ -L "$dest" ]] || [[ ! -e "$dest" ]]; then
+        run ln -sfn "$src" "$dest"
+    elif $FORCE; then
+        backup_path "$dest"
+        run ln -sfn "$src" "$dest"
+    else
+        warn "$dest exists — skip systemd unit (use --force to replace)"
+        return
+    fi
+    if $DRY_RUN; then
+        log "DRY: systemctl --user enable --now quickshell.service"
+        return
+    fi
+    if command -v systemctl >/dev/null 2>&1; then
+        systemctl --user daemon-reload
+        systemctl --user enable quickshell.service 2>/dev/null \
+            && log "Enabled quickshell.service (starts with graphical session)" \
+            || warn "Could not enable quickshell.service — use start-quickshell.sh manually"
+    fi
+}
+
 print_summary() {
     cat <<'EOF'
 
@@ -339,7 +365,7 @@ print_summary() {
 ╠══════════════════════════════════════════════════════════════╣
 ║  Next steps:                                                 ║
 ║  1. Edit ~/.config/hypr/monitors.conf                        ║
-║  2. Log into Hyprland (or: quickshell & hypridle &)          ║
+║  2. Log into Hyprland (quickshell starts via autostart/systemd) ║
 ║  3. Super+Space — Control Center                             ║
 ║  4. Super+/ — Keybind menu                                   ║
 ║  5. Super+Ctrl+T — Wallpaper picker                          ║
@@ -364,6 +390,7 @@ main() {
     init_runtime_state
     install_machine_configs
     make_scripts_executable
+    install_systemd_units
     run_first_theme
     check_dependencies
     print_summary

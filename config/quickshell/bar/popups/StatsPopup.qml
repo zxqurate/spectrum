@@ -3,12 +3,13 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import "../../components"
 import "../../state"
 import "../../theme"
 
 // Hover popup for SystemStats — appears below the center pill.
 // Anchored top-only → LayerShell centers it horizontally automatically.
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     WlrLayershell.namespace: "quickshell"
@@ -185,7 +186,7 @@ PanelWindow {
         radius: Theme.barRadius + 4
         color: Theme.popupBg
         border.color: Theme.popupBorder
-        border.width: Theme.pillBorderWidth
+        border.width: Theme.pillBorderWidthEffective
 
         property real slideY: 0
         transform: Translate { y: card.slideY }

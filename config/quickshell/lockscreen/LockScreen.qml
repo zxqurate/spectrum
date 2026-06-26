@@ -5,6 +5,7 @@ import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import "../components"
 import "../state"
 import "../theme"
 import "../widgets"
@@ -14,7 +15,7 @@ Scope {
     Variants {
         model: Quickshell.screens
 
-        PanelWindow {
+        GlassPanelWindow {
             id: root
 
             required property var modelData

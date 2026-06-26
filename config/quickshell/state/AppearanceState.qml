@@ -10,16 +10,19 @@ Singleton {
     readonly property string appearanceConfPath:
         Quickshell.env("HOME") + "/.config/hypr/appearance.conf"
 
-    // Glass = semi-transparent QML surfaces + Hyprland layerrule blur (windowrules.conf).
-    // layerBlurActive gates all Theme.panelBg / pillColor / popupBg transparency.
+    // Glass = semi-transparent QML surfaces (+ Hyprland layerrule blur when enabled).
+    // glassActive — panel alpha in QML; layerBlurActive — also requires Hyprland decoration blur.
     property bool systemBlurPreferred: true
     property bool hyprBlurEnabled: true
 
     property real panelOpacity: 0.58
     property real panelCardOpacity: 0.66
 
+    readonly property bool glassActive:
+        systemBlurPreferred && !ThemeState.lightTheme
+
     readonly property bool layerBlurActive:
-        systemBlurPreferred && hyprBlurEnabled && !ThemeState.lightTheme
+        glassActive && hyprBlurEnabled
 
     function asColor(c) {
         if (!c)
@@ -41,7 +44,7 @@ Singleton {
         const col = asColor(base)
         if (!col)
             return col
-        if (!layerBlurActive)
+        if (!glassActive)
             return solidColor(col)
 
         const a = card === true ? panelCardOpacity : opacity
@@ -70,6 +73,10 @@ Singleton {
             panelOpacity = Math.max(0.28, Math.min(0.88, opacity))
         if (cardOpacity !== undefined && !isNaN(cardOpacity))
             panelCardOpacity = Math.max(0.28, Math.min(0.92, cardOpacity))
+    }
+
+    function applySystemBlur(enabled, opacity, cardOpacity) {
+        applyFromSettings(enabled, opacity, cardOpacity)
     }
 
     function setHyprBlurEnabled(enabled) {
@@ -110,13 +117,6 @@ Singleton {
         readConfProc.running = true
     }
 
-    function syncHyprLayerRules() {
-        if (!layerBlurActive)
-            return
-        layerRulesProc.running = false
-        layerRulesProc.running = true
-    }
-
     Process {
         id: readProc
         command: ["bash", "-c",
@@ -133,8 +133,10 @@ Singleton {
             for (const line of text.split("\n")) {
                 if (line.startsWith("hypr_blur_enabled=")) {
                     const v = line.substring("hypr_blur_enabled=".length).trim()
-                    if (v !== "")
-                        root.hyprBlurEnabled = v === "1"
+                    if (v === "1")
+                        root.hyprBlurEnabled = true
+                    else if (v === "0")
+                        root.hyprBlurEnabled = false
                     break
                 }
             }
@@ -143,7 +145,6 @@ Singleton {
             if (confText.trim())
                 root.parseConfText(confText)
             stdout._buf = ""
-            root.syncHyprLayerRules()
         }
     }
 
@@ -159,22 +160,8 @@ Singleton {
             if (stdout._buf.trim())
                 root.parseConfText(stdout._buf)
             stdout._buf = ""
-            root.syncHyprLayerRules()
         }
     }
-
-    Process {
-        id: layerRulesProc
-        command: ["bash", "-c",
-            "hyprctl --batch \"" +
-            "keyword layerrule blur on,match:namespace quickshell ; " +
-            "keyword layerrule ignore_alpha 0.04,match:namespace quickshell ; " +
-            "keyword layerrule blur on,match:namespace quickshell-lock ; " +
-            "keyword layerrule ignore_alpha 0.04,match:namespace quickshell-lock\""]
-        running: false
-    }
-
-    onLayerBlurActiveChanged: syncHyprLayerRules()
 
     Connections {
         target: ThemeState

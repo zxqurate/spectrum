@@ -4,9 +4,10 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
 import "../../state"
+import "../../components"
 import "../../theme"
 
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     WlrLayershell.namespace: "quickshell"
@@ -99,7 +100,7 @@ PanelWindow {
         radius: Theme.barRadius + 2
         color: Theme.popupBg
         border.color: Theme.popupBorder
-        border.width: Theme.pillBorderWidth
+        border.width: Theme.pillBorderWidthEffective
 
         property real slideX: 14
         opacity: 0

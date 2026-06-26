@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import "../components"
 import "../state"
 import "../theme"
 import "../widgets"
@@ -10,7 +11,7 @@ Scope {
     Variants {
         model: Quickshell.screens
 
-        PanelWindow {
+        GlassPanelWindow {
             id: toastRoot
             required property var modelData
 

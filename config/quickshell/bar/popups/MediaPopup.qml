@@ -3,11 +3,12 @@ import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Wayland
+import "../../components"
 import "../../state"
 import "../../theme"
 import "../../widgets"
 
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     required property var screen
@@ -95,7 +96,7 @@ PanelWindow {
         radius: Theme.barRadius + 6
         color: Theme.popupBg
         border.color: Theme.popupBorder
-        border.width: Theme.pillBorderWidth
+        border.width: Theme.pillBorderWidthEffective
         clip: true
 
         transformOrigin: Item.TopLeft

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
+import "../components"
 import "../theme"
 import "../state"
 import "./modules"
@@ -75,7 +76,7 @@ Scope {
                     barScreen.hideScreenPopups()
             }
 
-            PanelWindow {
+            GlassPanelWindow {
                 id: barWindow
                 screen: barScreen.modelData
                 visible: !barScreen.lockHidden

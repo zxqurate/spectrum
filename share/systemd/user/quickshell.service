@@ -1,0 +1,14 @@
+[Unit]
+Description=Quickshell (Spectrum shell UI)
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=%h/.config/hypr/scripts/start-quickshell.sh
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

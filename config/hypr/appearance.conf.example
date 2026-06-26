@@ -9,7 +9,7 @@ decoration {
 
     blur {
         enabled           = true
-        size              = 2
+        size              = 8
         passes            = 2
         xray              = false
         new_optimizations = true

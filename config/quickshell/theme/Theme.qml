@@ -7,7 +7,7 @@ import "../state"
 Singleton {
     // Palette still dark while matugen regenerates after switching to light.
     readonly property bool interimLight: ThemeState.lightTheme && !Colors.isLight
-    readonly property bool useGlassPanels: AppearanceState.layerBlurActive
+    readonly property bool useGlassPanels: AppearanceState.glassActive
 
     function surfaceMain() {
         return interimLight ? Colors.md3.inverse_surface : Colors.md3.surface_container
@@ -48,6 +48,7 @@ Singleton {
     readonly property string iconFontFamily: "JetBrainsMono Nerd Font"
     readonly property int fontWeight: Font.Medium
     readonly property int pillBorderWidth: 2
+    readonly property int pillBorderWidthEffective: useGlassPanels ? 0 : pillBorderWidth
     readonly property real workspaceDotBorder: 1.5
     readonly property int compactPillWidth: pillPaddingHCompact * 2 + iconSize + 4
     readonly property int clockPillWidth: pillPaddingH * 2 + 52

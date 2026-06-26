@@ -153,6 +153,32 @@ hyprctl reload
 
 **Quickshell не найден** — на Arch: `yay -S quickshell`
 
+**Quickshell пропадает после закрытия терминала**
+
+Не запускай `quickshell` голым — процесс привязан к терминалу и умрёт вместе с ним. Используй:
+
+```bash
+~/.config/hypr/scripts/start-quickshell.sh
+# или
+quickshell --daemonize
+```
+
+После установки Spectrum поднимает его через autostart Hyprland и (если доступен systemd) `quickshell.service`:
+
+```bash
+systemctl --user enable --now quickshell.service
+quickshell list   # должен показать shell.qml
+```
+
+**Blur / System blur / нет прозрачности на баре**
+
+1. Quickshell должен быть запущен (`quickshell list`).
+2. Тёмная тема + включены **System blur** и **Blur** в настройках (Super+Space → ⚙).
+3. После обновления конфига: `killall quickshell; ~/.config/hypr/scripts/start-quickshell.sh`
+4. Для Hyprland blur: `hyprctl reload` (layerrule в `windowrules.conf`).
+
+Прозрачность панелей требует `surfaceFormat.opaque: false` на layer-окнах — это уже в `GlassPanelWindow`. Если бар всё ещё непрозрачный, перезапусти quickshell (не из терминала без `-d`).
+
 ---
 
 ## Лицензия

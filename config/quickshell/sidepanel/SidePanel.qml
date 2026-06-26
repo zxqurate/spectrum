@@ -4,11 +4,12 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import "../components"
 import "../state"
 import "../theme"
 import "../widgets"
 
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     required property var screen

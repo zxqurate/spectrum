@@ -5,9 +5,10 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import "../state"
+import "../components"
 import "../theme"
 
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     WlrLayershell.namespace: "quickshell"

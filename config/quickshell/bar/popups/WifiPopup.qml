@@ -6,9 +6,10 @@ import Quickshell.Io
 import Quickshell.Networking
 import Quickshell.Wayland
 import "../../state"
+import "../../components"
 import "../../theme"
 
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     required property var screen
@@ -259,7 +260,7 @@ PanelWindow {
         radius: Theme.barRadius + 4
         color: Theme.panelBg
         border.color: Theme.panelBorder
-        border.width: Theme.pillBorderWidth
+        border.width: Theme.pillBorderWidthEffective
         clip: true
 
         property real slideY: -8

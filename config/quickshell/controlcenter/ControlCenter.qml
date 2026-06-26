@@ -6,10 +6,11 @@ import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import "../components"
 import "../state"
 import "../theme"
 
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     WlrLayershell.namespace: "quickshell"
@@ -34,7 +35,6 @@ PanelWindow {
     property bool   showSettings:       false
     property bool   showPowerMenu:      false
     property bool   settingsHydrated:   false
-    property bool   appearanceDirty:    false
     property string selectedSection:    "appearance"
     property bool   showAddLayoutInput: false
     property string newLayoutDraft:     ""
@@ -108,6 +108,14 @@ PanelWindow {
 
     function confBool(v) {
         return v === "1" || v === "true"
+    }
+
+    function hyprBool(v) {
+        return v ? "1" : "0"
+    }
+
+    function hyprConfBool(v) {
+        return v ? "true" : "false"
     }
 
     function pctFromFloat(v) { return Math.round(v * 100) }
@@ -975,10 +983,20 @@ PanelWindow {
         root.applyKeyword("general:border_size", size.toString())
     }
 
+    function applySystemBlur(enabled) {
+        if (!settingsHydrated)
+            return
+        settings.systemBlurEnabled = enabled
+        AppearanceState.applySystemBlur(enabled, undefined, undefined)
+        persistAppearanceConf(false)
+    }
+
     function applyKeyword(key, val) {
+        if (!settingsHydrated)
+            return
+        kwProc.kwKey = key
+        kwProc.kwVal = val
         kwProc.running = false
-        kwProc.kwKey   = key
-        kwProc.kwVal   = val
         kwProc.running = true
         if (key === "decoration:blur:enabled")
             AppearanceState.setHyprBlurEnabled(val === "true" || val === "1")
@@ -994,10 +1012,8 @@ PanelWindow {
     }
 
     function persistAppearanceConf(reloadAfter) {
-        if (!settingsHydrated) {
-            appearanceDirty = true
+        if (!settingsHydrated)
             return
-        }
         appearanceSaveTimer.restart()
     }
 
@@ -1188,12 +1204,12 @@ PanelWindow {
     onShowSettingsChanged: {
         if (showSettings) {
             settingsHydrated = false
-            appearanceDirty = false
             _readPanelOpacity = NaN
             _readPanelCardOpacity = NaN
             WlrLayershell.keyboardFocus = WlrKeyboardFocus.OnDemand
             root.selectedSection = "appearance"
-            readSettingsProc.running      = true
+            readSettingsProc.running = false
+            readSettingsProc.running = true
             readWallpaperPathProc.running = true
             distroInfoProc.running        = true
             ThemeState.reloadFromDisk()
@@ -1208,7 +1224,6 @@ PanelWindow {
                 persistKbSwitchBindConf()
             }
             settingsHydrated = false
-            appearanceDirty = false
         }
     }
 
@@ -1580,6 +1595,13 @@ PanelWindow {
                         NumberAnimation { duration: 320; easing.type: Easing.OutBack }
                     }
 
+                    // Behind panel content — blocks click-through to the backdrop without stealing button clicks.
+                    MouseArea {
+                        anchors.fill: parent
+                        propagateComposedEvents: true
+                        onClicked: mouse => mouse.accepted = true
+                    }
+
                     ColumnLayout {
                         id: powerPanelCol
                         width: parent.width - 32
@@ -1662,11 +1684,6 @@ PanelWindow {
                     }
 
                     height: powerPanelCol.implicitHeight + 32
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: mouse => mouse.accepted = true
-                    }
                 }
             }
         }
@@ -1944,10 +1961,7 @@ PanelWindow {
                                     onToggled: val => {
                                         if (ThemeState.lightTheme || !settingsHydrated)
                                             return
-                                        settings.systemBlurEnabled = val
-                                        appearanceDirty = true
-                                        AppearanceState.applyFromSettings(val, undefined, undefined)
-                                        root.persistAppearanceConf(false)
+                                        root.applySystemBlur(val)
                                     }
                                 }
 
@@ -1976,10 +1990,11 @@ PanelWindow {
                             // Blur
                             SettingToggleRow {
                                 rowIcon: "󰻂"; rowLabel: "Blur"; rowChecked: settings.blurEnabled
+                                rowEnabled: settingsHydrated
                                 onToggled: val => {
                                     settings.blurEnabled = val
                                     AppearanceState.setHyprBlurEnabled(val)
-                                    root.applyKeyword("decoration:blur:enabled", val ? "true" : "false")
+                                    root.applyKeyword("decoration:blur:enabled", root.hyprBool(val))
                                 }
                             }
                             SettingNumRow {
@@ -2078,9 +2093,10 @@ PanelWindow {
 
                             SettingToggleRow {
                                 rowIcon: "󰇄"; rowLabel: "Shadows"; rowChecked: settings.shadowEnabled
+                                rowEnabled: settingsHydrated
                                 onToggled: val => {
                                     settings.shadowEnabled = val
-                                    root.applyKeyword("decoration:shadow:enabled", val ? "true" : "false")
+                                    root.applyKeyword("decoration:shadow:enabled", root.hyprBool(val))
                                 }
                             }
                             SettingNumRow {
@@ -2928,7 +2944,8 @@ PanelWindow {
         id: kwProc
         property string kwKey: ""
         property string kwVal: ""
-        command: ["hyprctl", "keyword", kwKey, kwVal]
+        environment: ({ "KW_KEY": kwKey, "KW_VAL": kwVal })
+        command: ["bash", "-c", "hyprctl keyword \"$KW_KEY\" \"$KW_VAL\""]
         running: false
     }
 
@@ -3002,20 +3019,12 @@ PanelWindow {
         ].join("; ")]
         running: false
         onExited: {
-            if (root.appearanceDirty)
-                AppearanceState.applyFromSettings(root.settings.systemBlurEnabled, undefined, undefined)
-            else
-                root.applyAppearancePrefsFromSettings(true)
+            root.applyAppearancePrefsFromSettings(true)
+            AppearanceState.setHyprBlurEnabled(settings.blurEnabled)
             root.settingsHydrated = true
-            if (root.appearanceDirty) {
-                root.appearanceDirty = false
-                root.persistAppearanceConf(false)
-            }
         }
         stdout: SplitParser {
             onRead: data => {
-                if (root.appearanceDirty)
-                    return
                 const line = data.trim()
                 if (!line || !line.includes("=")) return
                 const eq = line.indexOf("=")

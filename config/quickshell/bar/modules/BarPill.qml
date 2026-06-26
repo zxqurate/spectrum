@@ -27,7 +27,7 @@ Item {
         anchors.fill: parent
         radius: height / 2
         color: Theme.pillColor
-        border.width: Theme.pillBorderWidth
+        border.width: Theme.pillBorderWidthEffective
         border.color: root.hovered ? Qt.rgba(Theme.textAccent.r, Theme.textAccent.g, Theme.textAccent.b, 0.6)
                                    : Theme.barBorderColor
 

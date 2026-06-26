@@ -2,9 +2,10 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import "../../state"
+import "../../components"
 import "../../theme"
 
-PanelWindow {
+GlassPanelWindow {
     id: root
 
     required property var screen
@@ -93,7 +94,7 @@ PanelWindow {
         radius: Theme.barRadius + 4
         color: Theme.popupBg
         border.color: Theme.popupBorder
-        border.width: Theme.pillBorderWidth
+        border.width: Theme.pillBorderWidthEffective
 
         property real slideY: 0
         transform: Translate { y: card.slideY }
