@@ -129,10 +129,12 @@ GlassPanelWindow {
 
     function runPowerAction(actionId) {
         root.showPowerMenu = false
-        AppState.controlCenterVisible = false
         powerActionProc.actionId = actionId
         powerActionProc.running = false
-        powerActionProc.running = true
+        Qt.callLater(() => {
+            powerActionProc.running = true
+            AppState.controlCenterVisible = false
+        })
     }
 
     readonly property var powerActions: [
@@ -1595,15 +1597,16 @@ GlassPanelWindow {
                         NumberAnimation { duration: 320; easing.type: Easing.OutBack }
                     }
 
-                    // Behind panel content — blocks click-through to the backdrop without stealing button clicks.
+                    // Absorb clicks on empty panel area so the backdrop dismiss handler does not fire.
                     MouseArea {
                         anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: mouse => mouse.accepted = true
+                        z: 1
+                        onClicked: {}
                     }
 
                     ColumnLayout {
                         id: powerPanelCol
+                        z: 2
                         width: parent.width - 32
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -2859,7 +2862,9 @@ GlassPanelWindow {
     Process {
         id: powerActionProc
         property string actionId: ""
-        command: ["bash", Quickshell.env("HOME") + "/.config/hypr/scripts/power-action.sh", actionId]
+        environment: ({ "POWER_ACTION": actionId })
+        command: ["bash", "-c",
+            Quickshell.env("HOME") + "/.config/hypr/scripts/power-action.sh \"$POWER_ACTION\""]
         running: false
     }
 

@@ -213,7 +213,7 @@ init_runtime_state() {
 
     if [[ ! -f "$state/current_wallpaper" ]]; then
         if [[ ! -f "$wp" ]]; then
-            wp="$(find "$HOME/wallpapers" -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.webp' \) 2>/dev/null | head -1)"
+            wp="$(find -L "$HOME/wallpapers" -maxdepth 3 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.avif' \) 2>/dev/null | head -1)"
             wp="${wp:-$HOME/wallpapers/default.jpg}"
         fi
         if $DRY_RUN; then
@@ -295,21 +295,47 @@ deploy_configs() {
 }
 
 deploy_wallpapers() {
-    if [[ ! -d "$REPO_ROOT/wallpapers" ]]; then
-        return
+    local repo_wp="$REPO_ROOT/wallpapers"
+    local user_wp="$HOME/wallpapers"
+    local img_re='\.(jpg|jpeg|png|webp|gif|avif|bmp)$'
+
+    # Never symlink ~/wallpapers to the repo — users add their own images there and
+    # a symlink breaks when the checkout is empty or moved.
+    if [[ -L "$user_wp" ]]; then
+        local tmp migrated=()
+        tmp="$(mktemp -d)"
+        while IFS= read -r f; do
+            migrated+=("$f")
+        done < <(find -L "$user_wp" -maxdepth 1 -type f -iregex ".*${img_re}" 2>/dev/null || true)
+        if ((${#migrated[@]})); then
+            run cp -a "${migrated[@]}" "$tmp/"
+        fi
+        run rm "$user_wp"
+        run mkdir -p "$user_wp"
+        if ((${#migrated[@]})); then
+            run cp -a "$tmp/." "$user_wp/"
+            log "Migrated ${#migrated[@]} wallpaper(s) from symlink to ~/wallpapers"
+        else
+            warn "Removed empty ~/wallpapers symlink — add images to ~/wallpapers/"
+        fi
+        run rm -rf "$tmp"
+    elif [[ ! -d "$user_wp" ]]; then
+        run mkdir -p "$user_wp"
+        log "Created ~/wallpapers"
     fi
-    if [[ -L "$HOME/wallpapers" ]]; then
-        log "Wallpapers already linked"
-        return
-    fi
-    if [[ -d "$HOME/wallpapers" && "$FORCE" != true ]]; then
-        warn "~/wallpapers exists — copying repo wallpapers into it"
-        copy_tree "$REPO_ROOT/wallpapers" "$HOME/wallpapers"
-    elif [[ -d "$HOME/wallpapers" && "$FORCE" == true ]]; then
-        backup_path "$HOME/wallpapers"
-        link_tree "$REPO_ROOT/wallpapers" "$HOME/wallpapers"
-    else
-        link_tree "$REPO_ROOT/wallpapers" "$HOME/wallpapers"
+
+    if [[ -d "$repo_wp" ]]; then
+        local bundled=0 f base
+        while IFS= read -r f; do
+            base="$(basename "$f")"
+            if [[ ! -e "$user_wp/$base" ]]; then
+                run cp -a "$f" "$user_wp/$base"
+                bundled=$((bundled + 1))
+            fi
+        done < <(find "$repo_wp" -maxdepth 1 -type f -iregex ".*${img_re}" 2>/dev/null || true)
+        if ((bundled)); then
+            log "Installed $bundled bundled wallpaper(s) into ~/wallpapers"
+        fi
     fi
 }
 

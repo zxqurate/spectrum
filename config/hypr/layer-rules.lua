@@ -13,12 +13,12 @@ hl.layer_rule({
     name = "spectrum-quickshell-blur",
     match = { namespace = "quickshell" },
     blur = true,
-    ignore_alpha = 0.65,
+    ignore_alpha = 0.72,
 })
 
 hl.layer_rule({
     name = "spectrum-quickshell-lock-blur",
     match = { namespace = "quickshell-lock" },
     blur = true,
-    ignore_alpha = 0.65,
+    ignore_alpha = 0.72,
 })

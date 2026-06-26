@@ -49,6 +49,8 @@ Singleton {
     readonly property int fontWeight: Font.Medium
     readonly property int pillBorderWidth: 2
     readonly property int pillBorderWidthEffective: useGlassPanels ? 0 : pillBorderWidth
+    // QTBUG-137166: never pair color "transparent" with border.* on the same Rectangle.
+    readonly property color clearFill: Qt.rgba(0, 0, 0, 0.001)
     readonly property real workspaceDotBorder: 1.5
     readonly property int compactPillWidth: pillPaddingHCompact * 2 + iconSize + 4
     readonly property int clockPillWidth: pillPaddingH * 2 + 52

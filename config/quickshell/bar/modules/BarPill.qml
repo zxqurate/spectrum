@@ -28,8 +28,10 @@ Item {
         radius: height / 2
         color: Theme.pillColor
         border.width: Theme.pillBorderWidthEffective
-        border.color: root.hovered ? Qt.rgba(Theme.textAccent.r, Theme.textAccent.g, Theme.textAccent.b, 0.6)
-                                   : Theme.barBorderColor
+        border.color: Theme.pillBorderWidthEffective > 0
+            ? (root.hovered ? Qt.rgba(Theme.textAccent.r, Theme.textAccent.g, Theme.textAccent.b, 0.6)
+                            : Theme.barBorderColor)
+            : "transparent"
 
         Behavior on border.color { ColorAnimation { duration: 120 } }
 

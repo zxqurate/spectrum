@@ -21,5 +21,5 @@ done
 awww img "$WP" \
     --transition-type     grow \
     --transition-pos      center \
-    --transition-duration 1.2 \
-    --transition-fps      60
+    --transition-duration 0.8 \
+    --transition-fps      30

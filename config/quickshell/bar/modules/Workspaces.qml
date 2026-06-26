@@ -57,7 +57,7 @@ Item {
                 width: 8
                 height: 8
                 radius: 4
-                color: parent.hasWindows ? Theme.textPrimary : "transparent"
+                color: parent.hasWindows ? Theme.textPrimary : Theme.clearFill
                 border.width: Theme.workspaceDotBorder
                 border.color: parent.hasWindows
                     ? Theme.textPrimary
@@ -126,7 +126,7 @@ Item {
             width: root.showNumbers ? 24 : 22
             height: root.showNumbers ? 24 : 22
             radius: width / 2
-            color: "transparent"
+            color: Theme.clearFill
             border.width: Theme.workspaceDotBorder + 0.5
             border.color: root.showNumbers ? Theme.textAccent : Theme.textPrimary
             opacity: root.showNumbers ? 1.0 : 0.65

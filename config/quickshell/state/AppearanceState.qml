@@ -15,14 +15,13 @@ Singleton {
     property bool systemBlurPreferred: true
     property bool hyprBlurEnabled: true
 
-    property real panelOpacity: 0.58
-    property real panelCardOpacity: 0.66
+    property real panelOpacity: 0.72
+    property real panelCardOpacity: 0.78
 
-    readonly property bool glassActive:
-        systemBlurPreferred && !ThemeState.lightTheme
+    readonly property bool glassActive: !ThemeState.lightTheme
 
     readonly property bool layerBlurActive:
-        glassActive && hyprBlurEnabled
+        systemBlurPreferred && hyprBlurEnabled && !ThemeState.lightTheme
 
     function asColor(c) {
         if (!c)

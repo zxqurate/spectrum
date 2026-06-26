@@ -51,33 +51,52 @@ GlassPanelWindow {
     }
 
     // ── Wallpaper data ────────────────────────────────────────────────────────
-    readonly property string wallpapersDir: Quickshell.env("HOME") + "/wallpapers"
-    readonly property string stateFile:     Quickshell.env("HOME") + "/.local/state/quickshell/current_wallpaper"
+    readonly property string homeDir: Quickshell.env("HOME") || ""
+    readonly property string wallpapersDir: homeDir + "/wallpapers"
+    readonly property string stateFile:     homeDir + "/.local/state/quickshell/current_wallpaper"
     property string currentWallpaper: ""
+    property string scanError: ""
 
     ListModel { id: wallpapersModel }
 
     function loadWallpapers() {
-        wallpapersModel.clear()
+        scanError = ""
+        listProc.running = false
         listProc.running = true
     }
 
     Process {
         id: listProc
+        environment: ({ "WALLPAPERS_DIR": root.wallpapersDir })
         command: ["bash", "-c",
-            "find '" + root.wallpapersDir + "' -maxdepth 2 -type f \\( " +
+            "if [[ ! -d \"$WALLPAPERS_DIR\" ]]; then exit 2; fi; " +
+            "find -L \"$WALLPAPERS_DIR\" -maxdepth 3 -type f \\( " +
             "-iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' " +
-            "-o -iname '*.gif'  -o -iname '*.webp' \\) | sort"]
+            "-o -iname '*.gif'  -o -iname '*.webp' -o -iname '*.avif' -o -iname '*.bmp' \\) " +
+            "2>/dev/null | sort"]
         running: false
-        stdout: SplitParser {
-            onRead: data => {
-                if (data && data.trim()) {
-                    const p     = data.trim()
+        stdout: StdioCollector {
+            onStreamFinished: {
+                wallpapersModel.clear()
+                const text = (this.text || "").trim()
+                if (!text)
+                    return
+                const lines = text.split("\n")
+                for (let i = 0; i < lines.length; i++) {
+                    const p = lines[i].trim()
+                    if (!p)
+                        continue
                     const name  = p.split("/").pop()
                     const label = name.replace(/\.[^.]+$/, "")
                     wallpapersModel.append({ filePath: p, fileName: label })
                 }
             }
+        }
+        onExited: (exitCode) => {
+            if (exitCode === 2)
+                root.scanError = "Directory not found: " + root.wallpapersDir
+            else if (exitCode !== 0)
+                root.scanError = "Could not scan " + root.wallpapersDir
         }
     }
 
@@ -136,8 +155,8 @@ GlassPanelWindow {
         command: ["awww", "img",
             "--transition-type",     "grow",
             "--transition-pos",      "center",
-            "--transition-duration", "1.2",
-            "--transition-fps",      "60",
+            "--transition-duration", "0.8",
+            "--transition-fps",      "30",
             wpPath]
         running: false
     }
@@ -303,7 +322,10 @@ GlassPanelWindow {
                     visible: wallpapersModel.count === 0
                     font.family: Theme.fontFamily; font.pixelSize: 13
                     color: Theme.textMuted; opacity: 0.55
-                    text: "No images found in ~/wallpapers/"
+                    horizontalAlignment: Text.AlignHCenter
+                    text: root.scanError !== ""
+                        ? root.scanError
+                        : "No images found in " + root.wallpapersDir
                 }
 
                 delegate: Item {

@@ -19,7 +19,7 @@ done
 awww img "$WP" \
     --transition-type     grow \
     --transition-pos      center \
-    --transition-duration 1.2 \
-    --transition-fps      60
+    --transition-duration 0.8 \
+    --transition-fps      30
 
 exec bash "$HOME/.config/hypr/scripts/run-matugen.sh" "$WP"
